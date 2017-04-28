@@ -20,7 +20,7 @@ func Command() cli.Command {
 	return cli.Command{
 		Name:      "daemon",
 		ShortName: "d",
-		Usage:     "control the lifetime of a mpv process",
+		Usage:     "control the default mpv process",
 		Subcommands: []cli.Command{
 			startCmd(),
 			stopCmd(),

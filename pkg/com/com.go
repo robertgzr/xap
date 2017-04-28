@@ -3,6 +3,7 @@ package com
 import (
 	"errors"
 	"os"
+	"strconv"
 
 	"github.com/blang/mpv"
 )
@@ -30,6 +31,14 @@ func NewCom(socketPath string) (*Com, error) {
 	mpvc := mpv.NewClient(ipcc)
 
 	return &Com{*mpvc}, nil
+}
+
+func (c *Com) GetIntProperty(prop string) (int, error) {
+	res, err := c.GetProperty(prop)
+	if err != nil {
+		return -1, err
+	}
+	return strconv.Atoi(res)
 }
 
 func (c *Com) Quit() error {
