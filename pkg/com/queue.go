@@ -2,9 +2,9 @@ package com
 
 import (
 	"errors"
-	"net/url"
 	"path"
 	"strconv"
+	"strings"
 
 	"github.com/blang/mpv"
 )
@@ -24,12 +24,12 @@ type Track struct {
 func (c *Com) List() ([]Track, error) {
 	var plst []Track
 
-	resp, err := c.Exec("get_property", "playlist")
+	res, err := c.Exec("get_property", "playlist")
 	if err != nil {
 		return nil, err
 	}
 
-	rawLst, ok := resp.Data.([]interface{})
+	rawLst, ok := res.Data.([]interface{})
 	if !ok {
 		return nil, mpv.ErrInvalidType
 	}
@@ -95,6 +95,15 @@ func (c *Com) LoadNext(tracks ...string) error {
 
 func (c *Com) load(tracks []string, mode string) error {
 	for _, t := range tracks {
+		// load file or URL
+		switch {
+		case strings.HasSuffix(t, ".nfo"):
+			fallthrough
+		case strings.HasSuffix(t, ".jpg"):
+			fallthrough
+		case strings.HasSuffix(t, ".png"):
+			continue
+		}
 		if err := c.loadSingleTrack(t, mode); err != nil {
 			return errors.New(ErrLoadingTrack + err.Error())
 		}
@@ -106,11 +115,25 @@ func (c *Com) loadSingleTrack(track, mode string) error {
 	if track == "" {
 		return ErrNoFilepath
 	}
-	if uri, err := url.Parse(track); err != nil {
-		println(uri.String())
-		return nil
-	}
 	return c.Loadfile(track, mode)
+}
+
+func (c *Com) LoadListAppend(path string) error {
+	return c.loadlist(path, mpv.LoadListModeAppend)
+}
+
+func (c *Com) LoadListReplace(path string) error {
+	return c.loadlist(path, mpv.LoadListModeReplace)
+}
+
+// TODO: LoadListNext
+
+func (c *Com) loadlist(path, mode string) error {
+	_, err := c.Exec("loadlist", path, mode)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (c *Com) Next() error {
@@ -152,4 +175,13 @@ func (c *Com) Clear() error {
 		return err
 	}
 	return nil
+}
+
+func (c *Com) Goto(pos int) error {
+	if len, err := c.PlaylistLen(); err != nil {
+		return err
+	} else if len < pos {
+		return errors.New("Outside of playlist")
+	}
+	return c.SetProperty("playlist-pos", pos)
 }

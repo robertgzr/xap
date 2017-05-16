@@ -1,22 +1,13 @@
 package com
 
-import "strconv"
-
 func (c *Com) Play() error {
 	posString, err := c.GetProperty("playlist-pos")
 	if err != nil {
 		return err
 	}
-	if posString == "" {
-		println("nopos")
-		return ErrNoPlayerRunning
+	if posString == "<nil>" {
+		return c.SetProperty("playlist-pos", 0)
 	}
-
-	pos, err := strconv.Atoi(posString)
-	if err != nil {
-		return err
-	}
-	println(pos, pos+1)
 
 	return c.SetPause(false)
 }

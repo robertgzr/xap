@@ -2,40 +2,54 @@ package main
 
 import (
 	"os"
+	"time"
 
-	"rbg.re/robertgzr/xapper/cmd/xap/daemon"
-	"rbg.re/robertgzr/xapper/cmd/xap/player"
-	"rbg.re/robertgzr/xapper/cmd/xap/queue"
+	"rbg.re/robertgzr/xapper/pkg/com"
 
 	"github.com/urfave/cli"
 )
 
 const version string = "v0.1.0"
 
+var c *com.Com
+
 func main() {
 	app := &cli.App{
-		Name:      "xap",
-		Usage:     "cli for the xapper lib",
-		UsageText: "xap [global options] command [command options] [arguments...]",
-		Commands: []cli.Command{
-			daemon.Command(),
-			player.Command(),
-			queue.Command(),
+		Name:                 "xap",
+		Version:              "0.1.0",
+		Compiled:             time.Now(),
+		HideVersion:          true,
+		Usage:                "cli to remote control mpv player",
+		UsageText:            "xap [global options] command [command options] [arguments...]",
+		Commands: []*cli.Command{
+			ControlSubcommand(),
+			QueueSubcommand(),
+			PlayerSubcommand(),
+			DaemonSubcommand(),
+			BridgeSubcommand(),
 		},
 		Flags: []cli.Flag{
 			&cli.StringFlag{
-				Name:  "socket, S",
+				Name:  "socket",
+				Aliases: []string{"S"},
 				Usage: "filepath to the ipc socket",
-				Value: "/tmp/xapper.sock",
+				Value: "/tmp/xap.sock",
 			},
 		},
-		Version:              "0.1.0",
-		HideVersion:          true,
-		EnableBashCompletion: true,
+		EnableShellCompletion: true,
+		// Action: func(c *cli.Context) error {
+		// 	cli.DefaultAppComplete(c)
+		// 	return nil
+		// },
 		// Authors: []cli.Author{
 		//	cli.Author{Name: "robertgzr", Email: "robertguenzler@gmail.com"},
 		// },
 	}
 
 	app.Run(os.Args)
+}
+
+func initCom(ctx *cli.Context) (err error) {
+	c, err = com.NewCom(ctx.String("socket"))
+	return
 }
