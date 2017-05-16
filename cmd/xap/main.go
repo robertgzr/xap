@@ -21,13 +21,6 @@ func main() {
 		HideVersion:          true,
 		Usage:                "cli to remote control mpv player",
 		UsageText:            "xap [global options] command [command options] [arguments...]",
-		Commands: []*cli.Command{
-			ControlSubcommand(),
-			QueueSubcommand(),
-			PlayerSubcommand(),
-			DaemonSubcommand(),
-			BridgeSubcommand(),
-		},
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:  "socket",
@@ -45,6 +38,12 @@ func main() {
 		//	cli.Author{Name: "robertgzr", Email: "robertguenzler@gmail.com"},
 		// },
 	}
+	
+	mountCommands(app, SettingsCommand())
+	mountCommands(app, DaemonCommand())
+	mountCommands(app, BridgeCommand())
+	mountCommands(app, QueueCommands()...)
+	mountCommands(app, ControlCommands()...)
 
 	app.Run(os.Args)
 }
@@ -52,4 +51,8 @@ func main() {
 func initCom(ctx *cli.Context) (err error) {
 	c, err = com.NewCom(ctx.String("socket"))
 	return
+}
+
+func mountCommands(app *cli.App, subcmds ...*cli.Command) {
+	app.Commands = append(app.Commands, subcmds...)
 }

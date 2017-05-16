@@ -11,57 +11,61 @@ import (
 	"github.com/urfave/cli"
 )
 
-func QueueSubcommand() *cli.Command {
-	return &cli.Command{
-		Name:    "queue",
-		Aliases: []string{"q"},
-		Usage:   "manage mpv's internal playlist",
-		Subcommands: []*cli.Command{
-			addCmd(),
-			nextCmd(),
-			prevCmd(),
-			rmCmd(),
-			clearCmd(),
-			moveCmd(),
-			shuffleCmd(),
-			gotoCmd(),
-			saveCmd(),
-			loadCmd(),
-		},
-		Before: initCom,
-		Action: queueStatus,
+func QueueCommands() []*cli.Command {
+	return []*cli.Command{
+		addCmd(),
+		nextCmd(),
+		prevCmd(),
+		rmCmd(),
+		clearCmd(),
+		moveCmd(),
+		shuffleCmd(),
+		gotoCmd(),
+		saveCmd(),
+		loadCmd(),
+		queueStatus(),
 	}
 }
 
-func queueStatus(ctx *cli.Context) error {
-	ls, err := c.List()
-	if err != nil {
-		return err
-	}
+func queueStatus() *cli.Command {
+	return &cli.Command{
+		Name:     "status",
+		Category: "queue",
+		Aliases:  []string{"q"},
+		Usage:    "show the queue",
+		Before: initCom,
+		Action: func(ctx *cli.Context) error {
+			ls, err := c.List()
+			if err != nil {
+				return err
+			}
 
-	if len(ls) == 0 {
-		fmt.Println("Queue is empty")
-		return nil
-	}
+			if len(ls) == 0 {
+				fmt.Println("Queue is empty")
+				return nil
+			}
 
-	var buf bytes.Buffer
-	buf.WriteString("QUEUE:\n")
-	for _, tr := range ls {
-		var current string
-		if tr.Current {
-			current = ">"
-		}
+			var buf bytes.Buffer
+			buf.WriteString("QUEUE:\n")
+			for _, tr := range ls {
+				var current string
+				if tr.Current {
+					current = ">"
+				}
 
-		buf.WriteString(fmt.Sprintf("%2s %2d: %s\n", current, tr.Index, tr.Title))
+				buf.WriteString(fmt.Sprintf("%2s %2d: %s\n", current, tr.Index, tr.Title))
+			}
+			buf.WriteString(fmt.Sprintf("\n%d track(s)", len(ls)))
+			fmt.Println(buf.String())
+			return nil
+		},
 	}
-	buf.WriteString(fmt.Sprintf("\n%d track(s)", len(ls)))
-	fmt.Println(buf.String())
-	return nil
 }
 
 func addCmd() *cli.Command {
 	return &cli.Command{
 		Name:        "add",
+		Category:    "queue",
 		Usage:       "add track(s) to the queue",
 		ArgsUsage:   "TRACK...",
 		Description: "TRACK can be a file or URL or - to read the list of tracks/URLs from stdin",
@@ -71,16 +75,17 @@ func addCmd() *cli.Command {
 				Usage: "add but don't play",
 			},
 			&cli.BoolFlag{
-				Name:  "replace",
+				Name:    "replace",
 				Aliases: []string{"r"},
-				Usage: "add and play, stopping the current track",
+				Usage:   "add and play, stopping the current track",
 			},
 			&cli.BoolFlag{
-				Name:  "next",
+				Name:    "next",
 				Aliases: []string{"n"},
-				Usage: "add as next track",
+				Usage:   "add as next track",
 			},
 		},
+		Before: initCom,
 		Action: func(ctx *cli.Context) error {
 			tracks := []string{ctx.Args().First()}
 			tracks = append(tracks, ctx.Args().Tail()...)
@@ -114,10 +119,12 @@ func addCmd() *cli.Command {
 func rmCmd() *cli.Command {
 	return &cli.Command{
 		Name:        "remove",
+		Category:    "queue",
 		Aliases:     []string{"rm"},
 		Usage:       "remove tracks from the playlist",
 		ArgsUsage:   "POSITION",
 		Description: "POSITION can be a single index or a range expression like from..to (`to` is not removed)",
+		Before: initCom,
 		Action: func(ctx *cli.Context) error {
 			ns := strings.Split(ctx.Args().First(), "..")
 			switch {
@@ -154,8 +161,10 @@ func rmCmd() *cli.Command {
 
 func clearCmd() *cli.Command {
 	return &cli.Command{
-		Name:  "clear",
-		Usage: "remove all entries from the queue",
+		Name:     "clear",
+		Category: "queue",
+		Usage:    "remove all entries from the queue",
+		Before: initCom,
 		Action: func(_ *cli.Context) error {
 			return c.Clear()
 		},
@@ -166,8 +175,10 @@ func moveCmd() *cli.Command {
 	return &cli.Command{
 		Name:      "move",
 		Aliases:   []string{"mv"},
+		Category:  "queue",
 		Usage:     "moves a track from FROM to TO on the playlist",
 		ArgsUsage: "FROM TO",
+		Before: initCom,
 		Action: func(ctx *cli.Context) error {
 			from, err := strconv.Atoi(ctx.Args().Get(0))
 			if err != nil {
@@ -184,8 +195,10 @@ func moveCmd() *cli.Command {
 
 func shuffleCmd() *cli.Command {
 	return &cli.Command{
-		Name:  "shuffle",
-		Usage: "shuffle the current playlist",
+		Name:     "shuffle",
+		Category: "queue",
+		Usage:    "shuffle the current playlist",
+		Before: initCom,
 		Action: func(_ *cli.Context) error {
 			return c.Shuffle()
 		},
@@ -194,8 +207,10 @@ func shuffleCmd() *cli.Command {
 
 func nextCmd() *cli.Command {
 	return &cli.Command{
-		Name:  "next",
-		Usage: "skips to the next track",
+		Name:     "next",
+		Category: "queue",
+		Usage:    "skips to the next track",
+		Before: initCom,
 		Action: func(_ *cli.Context) error {
 			return c.Next()
 		},
@@ -204,8 +219,10 @@ func nextCmd() *cli.Command {
 
 func prevCmd() *cli.Command {
 	return &cli.Command{
-		Name:  "prev",
-		Usage: "skips to the previous track",
+		Name:     "prev",
+		Category: "queue",
+		Usage:    "skips to the previous track",
+		Before: initCom,
 		Action: func(_ *cli.Context) error {
 			return c.Prev()
 		},
@@ -215,8 +232,10 @@ func prevCmd() *cli.Command {
 func gotoCmd() *cli.Command {
 	return &cli.Command{
 		Name:      "goto",
+		Category:  "queue",
 		Usage:     "start playing NUMBER track on the queue",
 		ArgsUsage: "NUMBER",
+		Before: initCom,
 		Action: func(ctx *cli.Context) error {
 			pos, err := strconv.Atoi(ctx.Args().First())
 			if err != nil {
@@ -230,16 +249,18 @@ func gotoCmd() *cli.Command {
 func saveCmd() *cli.Command {
 	return &cli.Command{
 		Name:      "save",
+		Category:  "queue",
 		Usage:     "save the current playlist to a file",
 		ArgsUsage: "PATH",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
-				Name:  "format",
+				Name:    "format",
 				Aliases: []string{"f"},
-				Usage: "playlist format to save as",
-				Value: "m3u",
+				Usage:   "playlist format to save as",
+				Value:   "m3u",
 			},
 		},
+		Before: initCom,
 		Action: func(ctx *cli.Context) error {
 			path := ctx.Args().First()
 			if path == "" {
@@ -259,6 +280,7 @@ func saveCmd() *cli.Command {
 func loadCmd() *cli.Command {
 	return &cli.Command{
 		Name:      "load",
+		Category:  "queue",
 		Usage:     "load playlist from a file",
 		ArgsUsage: "PATH",
 		Flags: []cli.Flag{
@@ -267,16 +289,17 @@ func loadCmd() *cli.Command {
 				Usage: "add but don't play",
 			},
 			&cli.BoolFlag{
-				Name:  "replace",
+				Name:    "replace",
 				Aliases: []string{"r"},
-				Usage: "add and play, stopping the current track",
+				Usage:   "add and play, stopping the current track",
 			},
 			&cli.BoolFlag{
-				Name:  "next",
+				Name:    "next",
 				Aliases: []string{"n"},
-				Usage: "add as next track",
+				Usage:   "add as next track",
 			},
 		},
+		Before: initCom,
 		Action: func(ctx *cli.Context) error {
 			path := ctx.Args().First()
 			if path == "" {

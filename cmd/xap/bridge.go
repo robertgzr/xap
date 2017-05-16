@@ -7,10 +7,9 @@ import (
 	"rbg.re/robertgzr/xapper/pkg/socketbridge"
 )
 
-func BridgeSubcommand() *cli.Command {
+func BridgeCommand() *cli.Command {
 	return &cli.Command{
 		Name:      "bridge",
-		Aliases: []string{"b"},
 		Usage:     "create a socket bridge to connect to the mpv unix socket via tcp",
 		Flags: []cli.Flag{
 			&cli.StringFlag{

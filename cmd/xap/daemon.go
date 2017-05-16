@@ -18,10 +18,9 @@ var defaultMpvFlags = []string{
 }
 
 // DaemonSubcommand ...
-func DaemonSubcommand() *cli.Command {
+func DaemonCommand() *cli.Command {
 	return &cli.Command{
 		Name:    "daemon",
-		Aliases: []string{"d"},
 		Usage:   "control the default mpv process",
 		Subcommands: []*cli.Command{
 			runDaemonCmd(),
