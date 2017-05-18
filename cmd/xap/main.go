@@ -41,7 +41,6 @@ func main() {
 	
 	mountCommands(app, SettingsCommand())
 	mountCommands(app, DaemonCommand())
-	mountCommands(app, BridgeCommand())
 	mountCommands(app, QueueCommands()...)
 	mountCommands(app, ControlCommands()...)
 
