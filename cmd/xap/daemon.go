@@ -14,7 +14,7 @@ var defaultMpvFlags = []string{
 	"--no-video",
 	"--no-sub",
 	"--gapless-audio=yes",
-	"--volume=50.0",
+	"--volume=70.0",
 }
 
 // DaemonSubcommand ...
