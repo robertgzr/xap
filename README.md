@@ -1,38 +1,37 @@
-# xap - complete mpv controller
+# xap
 
-For now intended to be a lightweight alternative to mpd using mpv.
+*For now* a simple alternative to MPD using mpv.
 
-## components (design)
-
-### libxap
-
-a wrapper around mpv's commands, options and properties
-
-TODO: need a list of implemented "endpoints" of mpv functions
-
-    - [x] basic functionality in `pkg/com` (via `blang/mpv`)
-    - [ ] mpv doc parser?
-    - [ ] spawn/stop mpv instance
-    - [ ] connect to mpv via unix/tcp socket
-
-### xap cli
+## xap cli
 
 command line tool to interact with mpv via unix socket
 
-    - [x] basic player ctl
-    - [x] basic queue ctl
-    - [ ] player settings
-        - [x] switch audio device
-        - [ ] softvol adjustments
-    - [x] start/stop background mpv process
-    - [x] use with custom socket
+- [x] basic player ctl
+- [x] basic queue ctl
+- [ ] player settings
+    - [x] switch audio device
+    - [ ] softvol adjustments
+- [x] start/stop background mpv process
+- [x] use with custom mpv socket (e.g. to control [IINA](https://github.com/lhc70000/iina))
 
-### more
+For documentation of the available commands check `xap --help`.
 
-- platform integration using libxap
-- xap web ui
+## libxap
 
-## additional features
+wrapper around mpv's commands, options and properties (via [blang/mpv](https://github.com/blang/mpv))
 
-- [ ] [beets](beets.io) integration - shuffle library
-- ...
+- [x] basic functionality in `pkg/com`
+- [ ] spawn/stop mpv instance
+- [ ] connect to mpv via unix/tcp socket (find out if `blang/mpv` supports a way to do this)
+
+## more
+
+### tricks
+- add tracks/albums from your beets library: `beet ls -p <query> | xap add -`
+- simple shuffle with beets: `beet random -p -n <num> [-e] [<query>] | xap add -`
+
+### additional features
+
+- [ ] [beets](beets.io) integration: `shuffle` subcommand
+- [ ] xap web ui?
+- [ ] android app using libxap and a tcp socket?
