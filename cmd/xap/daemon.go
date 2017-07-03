@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os/exec"
 
-	"rbg.re/robertgzr/xapper/pkg/com"
+	"github.com/robertgzr/xap/pkg/com"
 
 	"github.com/urfave/cli"
 )
