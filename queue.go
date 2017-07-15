@@ -2,8 +2,8 @@ package main
 
 import (
 	"bufio"
-	"bytes"
 	"fmt"
+	"html/template"
 	"os"
 	"strconv"
 	"strings"
@@ -33,31 +33,25 @@ func queueStatus() *cli.Command {
 		Category: "queue",
 		Aliases:  []string{"q"},
 		Usage:    "show the queue",
-		Before: initCom,
+		Before:   initCom,
 		Action: func(ctx *cli.Context) error {
-			ls, err := c.List()
+			queue, err := c.Queue()
 			if err != nil {
 				return err
 			}
 
-			if len(ls) == 0 {
+			if len(queue) == 0 {
 				fmt.Println("Queue is empty")
 				return nil
 			}
 
-			var buf bytes.Buffer
-			buf.WriteString("QUEUE:\n")
-			for _, tr := range ls {
-				var current string
-				if tr.Current {
-					current = ">"
-				}
-
-				buf.WriteString(fmt.Sprintf("%2s %2d: %s\n", current, tr.Index, tr.Title))
-			}
-			buf.WriteString(fmt.Sprintf("\n%d track(s)", len(ls)))
-			fmt.Println(buf.String())
-			return nil
+			tmpl := `QUEUE:{{ range . }}
+| {{ printf "%02d" .Index }}: {{ if .Current }}*{{ else }} {{ end }} {{ .Title }}{{ end }}
+|
+| {{ len . }} track(s)
+`
+			t := template.Must(template.New("queue").Parse(tmpl))
+			return t.Execute(os.Stdout, queue)
 		},
 	}
 }
@@ -124,7 +118,7 @@ func rmCmd() *cli.Command {
 		Usage:       "remove tracks from the playlist",
 		ArgsUsage:   "POSITION",
 		Description: "POSITION can be a single index or a range expression like from..to (`to` is not removed)",
-		Before: initCom,
+		Before:      initCom,
 		Action: func(ctx *cli.Context) error {
 			ns := strings.Split(ctx.Args().First(), "..")
 			switch {
@@ -164,7 +158,7 @@ func clearCmd() *cli.Command {
 		Name:     "clear",
 		Category: "queue",
 		Usage:    "remove all entries from the queue",
-		Before: initCom,
+		Before:   initCom,
 		Action: func(_ *cli.Context) error {
 			return c.Clear()
 		},
@@ -178,7 +172,7 @@ func moveCmd() *cli.Command {
 		Category:  "queue",
 		Usage:     "moves a track from FROM to TO on the playlist",
 		ArgsUsage: "FROM TO",
-		Before: initCom,
+		Before:    initCom,
 		Action: func(ctx *cli.Context) error {
 			from, err := strconv.Atoi(ctx.Args().Get(0))
 			if err != nil {
@@ -198,7 +192,7 @@ func shuffleCmd() *cli.Command {
 		Name:     "shuffle",
 		Category: "queue",
 		Usage:    "shuffle the current playlist",
-		Before: initCom,
+		Before:   initCom,
 		Action: func(_ *cli.Context) error {
 			return c.Shuffle()
 		},
@@ -210,7 +204,7 @@ func nextCmd() *cli.Command {
 		Name:     "next",
 		Category: "queue",
 		Usage:    "skips to the next track",
-		Before: initCom,
+		Before:   initCom,
 		Action: func(_ *cli.Context) error {
 			return c.Next()
 		},
@@ -222,7 +216,7 @@ func prevCmd() *cli.Command {
 		Name:     "prev",
 		Category: "queue",
 		Usage:    "skips to the previous track",
-		Before: initCom,
+		Before:   initCom,
 		Action: func(_ *cli.Context) error {
 			return c.Prev()
 		},
@@ -235,7 +229,7 @@ func gotoCmd() *cli.Command {
 		Category:  "queue",
 		Usage:     "start playing NUMBER track on the queue",
 		ArgsUsage: "NUMBER",
-		Before: initCom,
+		Before:    initCom,
 		Action: func(ctx *cli.Context) error {
 			pos, err := strconv.Atoi(ctx.Args().First())
 			if err != nil {

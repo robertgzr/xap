@@ -13,6 +13,8 @@ var (
 	ErrLoadingTrack string = "Error loading track: "
 )
 
+type Queue []Track
+
 type Track struct {
 	Index    int
 	Title    string
@@ -21,8 +23,8 @@ type Track struct {
 	Current  bool
 }
 
-func (c *Com) List() ([]Track, error) {
-	var plst []Track
+func (c *Com) Queue() (Queue, error) {
+	var plst Queue
 
 	res, err := c.Exec("get_property", "playlist")
 	if err != nil {

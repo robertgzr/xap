@@ -1,6 +1,9 @@
 package com
 
 import (
+	"fmt"
+	"time"
+
 	"github.com/blang/mpv"
 )
 
@@ -12,12 +15,19 @@ type Metadata struct {
 	Nr     string
 	Date   string
 
-	Duration float64
+	Pos Position
 }
 
-func (c *Com) CurrentTrack() (Metadata, error) {
-	var meta Metadata
-	res, err := c.Exec("get_property", "metadata")
+type Position struct {
+	FmtFunc     func(d time.Duration) string
+	Len         time.Duration
+	Current     time.Duration
+	CurrentPerc float64
+}
+
+func (c *Com) Now() (meta Metadata, err error) {
+	var res = new(mpv.Response)
+	res, err = c.Exec("get_property", "metadata")
 	if err != nil {
 		return meta, err
 	}
@@ -53,13 +63,31 @@ func (c *Com) CurrentTrack() (Metadata, error) {
 		meta.Title = title
 	}
 
-	d, err := c.Duration()
+	var dur float64
+	dur, err = c.Duration()
 	if err != nil {
-		return meta, err
+		return
 	}
-	meta.Duration = d
-
-	return meta, err
+	meta.Pos.Len, err = time.ParseDuration(fmt.Sprintf("%fs", dur))
+	if err != nil {
+		return
+	}
+	pos, err := c.Position()
+	if err != nil {
+		return
+	}
+	meta.Pos.Current, err = time.ParseDuration(fmt.Sprintf("%fs", pos))
+	if err != nil {
+		return
+	}
+	meta.Pos.CurrentPerc, err = c.PercentPosition()
+	if err != nil {
+		return
+	}
+	meta.Pos.FmtFunc = func(d time.Duration) string {
+		return fmt.Sprintf("%02d:%02d:%02d", int(d.Hours())%24, int(d.Minutes())%60, int(d.Seconds())%60)
+	}
+	return
 }
 
 func (c *Com) MediaTitle() (string, error) {
