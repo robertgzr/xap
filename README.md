@@ -16,13 +16,20 @@ command line tool to interact with mpv via unix socket
 
 For documentation of the available commands check `xap --help`.
 
-## libxap
+## _libxap \*planned\*_
 
 wrapper around mpv's commands, options and properties (via [blang/mpv](https://github.com/blang/mpv))
 
 - [x] basic functionality in `pkg/com`
 - [ ] spawn/stop mpv instance
 - [ ] connect to mpv via unix/tcp socket (find out if `blang/mpv` supports a way to do this)
+
+## Installation
+
+With a working [Go environment](https://golang.org/doc/install):
+```
+go get -u github.com/robertgzr/xap
+```
 
 ## more
 
