@@ -44,6 +44,7 @@ func main() {
 	mountCommands(app, QueueCommands()...)
 	mountCommands(app, ControlCommands()...)
 	mountCommands(app, RawCommand())
+	mountCommands(app, RadioCommand())
 
 	app.Run(os.Args)
 }
