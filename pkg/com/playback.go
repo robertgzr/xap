@@ -1,5 +1,13 @@
 package com
 
+func (c Com) Paused() bool {
+	ok, err := c.Pause()
+	if err != nil {
+		return false
+	}
+	return ok
+}
+
 func (c *Com) Play() error {
 	posString, err := c.GetProperty("playlist-pos")
 	if err != nil {

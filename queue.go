@@ -100,6 +100,9 @@ func addCmd() *cli.Command {
 			case ctx.Bool("append-only"):
 				return c.LoadAppend(tracks...)
 			case ctx.Bool("replace"):
+				if c.Paused() {
+					defer c.Play()
+				}
 				return c.LoadReplace(tracks...)
 			case ctx.Bool("next"):
 				return c.LoadNext(tracks...)
