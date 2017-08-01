@@ -43,6 +43,7 @@ func main() {
 	mountCommands(app, DaemonCommand())
 	mountCommands(app, QueueCommands()...)
 	mountCommands(app, ControlCommands()...)
+	mountCommands(app, RawCommand())
 
 	app.Run(os.Args)
 }
