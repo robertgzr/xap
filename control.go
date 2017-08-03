@@ -1,8 +1,11 @@
 package main
 
 import (
+	"fmt"
+	"html"
 	"html/template"
 	"os"
+	"time"
 
 	"github.com/blang/mpv"
 	"github.com/urfave/cli"
@@ -31,13 +34,20 @@ func nowCmd() *cli.Command {
 			}
 
 			tmpl := `CURRENT:
-| {{ .Title }}
-{{if .Artist }}| {{ .Artist }}{{ end }}
-{{ if .Album }}| {{ .Album }} ({{ .Date }}) {{ .Nr }}{{ end }}
+| {{ .Title | unescape }}
+| {{with .Artist }}{{ . }}{{ end }}
+| {{with .Album }}{{ . }} ({{ .Date }}) {{ .Nr }}{{ end }}
 |
-{{ with .Pos }}| {{ call .FmtFunc .Current }} / {{ call .FmtFunc .Len }} ({{ printf "%.2f%%" .CurrentPerc }}){{ end }}
+| {{ with .Pos }}{{ timefmt .Current }} / {{ timefmt .Len }} ({{ printf "%.2f%%" .CurrentPerc }}){{ end }}
 `
-			t := template.Must(template.New("now").Parse(tmpl))
+			t := template.New("now")
+			t.Funcs(template.FuncMap(map[string]interface{}{
+				"timefmt": func(d time.Duration) string {
+					return fmt.Sprintf("%02d:%02d:%02d", int(d.Hours())%24, int(d.Minutes())%60, int(d.Seconds())%60)
+				},
+				"unescape": html.UnescapeString,
+			}))
+			t = template.Must(t.Parse(tmpl))
 			return t.Execute(os.Stdout, meta)
 		},
 	}

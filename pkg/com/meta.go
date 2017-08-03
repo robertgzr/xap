@@ -2,6 +2,7 @@ package com
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/blang/mpv"
@@ -19,7 +20,6 @@ type Metadata struct {
 }
 
 type Position struct {
-	FmtFunc     func(d time.Duration) string
 	Len         time.Duration
 	Current     time.Duration
 	CurrentPerc float64
@@ -62,6 +62,8 @@ func (c *Com) Now() (meta Metadata, err error) {
 		}
 		meta.Title = title
 	}
+	meta.Title = strings.TrimSuffix(meta.Title, "\"")
+	meta.Title = strings.TrimPrefix(meta.Title, "\"")
 
 	var dur float64
 	dur, err = c.Duration()
@@ -83,9 +85,6 @@ func (c *Com) Now() (meta Metadata, err error) {
 	meta.Pos.CurrentPerc, err = c.PercentPosition()
 	if err != nil {
 		return
-	}
-	meta.Pos.FmtFunc = func(d time.Duration) string {
-		return fmt.Sprintf("%02d:%02d:%02d", int(d.Hours())%24, int(d.Minutes())%60, int(d.Seconds())%60)
 	}
 	return
 }
