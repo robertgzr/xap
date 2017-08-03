@@ -15,18 +15,18 @@ var c *com.Com
 
 func main() {
 	app := &cli.App{
-		Name:                 "xap",
-		Version:              "0.1.0",
-		Compiled:             time.Now(),
-		HideVersion:          true,
-		Usage:                "cli to remote control mpv player",
-		UsageText:            "xap [global options] command [command options] [arguments...]",
+		Name:        "xap",
+		Version:     "0.1.0",
+		Compiled:    time.Now(),
+		HideVersion: true,
+		Usage:       "cli to remote control mpv player",
+		UsageText:   "xap [global options] command [command options] [arguments...]",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
-				Name:  "socket",
+				Name:    "socket",
 				Aliases: []string{"S"},
-				Usage: "filepath to the ipc socket",
-				Value: "/tmp/xap.sock",
+				Usage:   "filepath to the ipc socket",
+				Value:   "/tmp/xap.sock",
 			},
 		},
 		EnableShellCompletion: true,
@@ -38,7 +38,7 @@ func main() {
 		//	cli.Author{Name: "robertgzr", Email: "robertguenzler@gmail.com"},
 		// },
 	}
-	
+
 	mountCommands(app, SettingsCommand())
 	mountCommands(app, DaemonCommand())
 	mountCommands(app, QueueCommands()...)
