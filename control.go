@@ -5,6 +5,7 @@ import (
 	"html"
 	"html/template"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/blang/mpv"
@@ -18,6 +19,7 @@ func ControlCommands() []*cli.Command {
 		pauseCmd(),
 		stopCmd(),
 		from0Cmd(),
+		volumeCmd(),
 	}
 }
 
@@ -97,6 +99,46 @@ func stopCmd() *cli.Command {
 		Before:   initCom,
 		Action: func(_ *cli.Context) error {
 			return c.Stop()
+		},
+	}
+}
+
+func volumeCmd() *cli.Command {
+	return &cli.Command{
+		Name:            "vol",
+		Category:        "control",
+		ArgsUsage:       "[[+|-]VALUE]",
+		Usage:           "print and adjust the softvol property",
+		Before:          initCom,
+		SkipFlagParsing: true,
+		Action: func(ctx *cli.Context) error {
+			arg := ctx.Args().First()
+			switch arg {
+			case "":
+				vol, err := c.Volume()
+				if err != nil {
+					return err
+				}
+				fmt.Printf("VOLUME:\n| %v\n", vol)
+				return nil
+			case "-h":
+				fallthrough
+			case "--help":
+				return cli.ShowCommandHelp(ctx, "vol")
+			default:
+				val, err := strconv.ParseFloat(arg[1:], 64)
+				if err != nil {
+					return err
+				}
+				switch arg[:1] {
+				case "+":
+					return c.VolumeUp(val)
+				case "-":
+					return c.VolumeDown(val)
+				default:
+					return fmt.Errorf("missing + or - before VALUE")
+				}
+			}
 		},
 	}
 }
