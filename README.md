@@ -9,8 +9,9 @@ command line tool to interact with mpv via unix socket
 - [x] basic player ctl
 - [x] basic queue ctl
 - [ ] player settings
-    - [x] switch audio device
-    - [ ] softvol adjustments
+    - [x] switch audio device (via `xap settings audio-device`)
+    - [x] softvol adjustments (via `xap vol`)
+    - [x] access to raw mpv properties (via `xap raw`)
 - [x] start/stop background mpv process
 - [x] use with custom mpv socket (e.g. to control [IINA](https://github.com/lhc70000/iina))
 
