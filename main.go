@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"time"
 
@@ -46,12 +47,17 @@ func main() {
 	mountCommands(app, RawCommand())
 	mountCommands(app, RadioCommand())
 
-	app.Run(os.Args)
+	if err := app.Run(os.Args); err != nil {
+		fmt.Fprintf(os.Stderr, "error: %s\n", err)
+	}
 }
 
 func initCom(ctx *cli.Context) (err error) {
 	c, err = com.NewCom(ctx.String("socket"))
-	return
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func mountCommands(app *cli.App, subcmds ...*cli.Command) {

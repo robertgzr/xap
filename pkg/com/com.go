@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"path/filepath"
 	"strconv"
 
 	"github.com/blang/mpv"
@@ -20,7 +21,14 @@ type Com struct {
 }
 
 // NewCom returns a new client on the socket at socketPath
-func NewCom(socketPath string) (*Com, error) {
+func NewCom(socketPath string) (c *Com, err error) {
+	socketPath, err = filepath.EvalSymlinks(socketPath)
+	if err != nil {
+		return nil, err
+	}
+	if _, err := os.Stat(socketPath); err != nil {
+		return nil, err
+	}
 	defer func() {
 		if err := recover(); err != nil {
 			fmt.Println(ErrNoPlayerRunning)
@@ -37,6 +45,12 @@ func NewCom(socketPath string) (*Com, error) {
 
 	ipcc := mpv.NewIPCClient(socketPath)
 	mpvc := mpv.NewClient(ipcc)
+
+	// sanity check, do we have a connection...?
+	res, err := ipcc.Exec("get_version")
+	if res == nil {
+		return nil, err
+	}
 
 	return &Com{*mpvc}, nil
 }
