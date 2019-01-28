@@ -26,7 +26,7 @@ func DaemonCommand() *cli.Command {
 			runDaemonCmd(),
 			stopDaemonCmd(),
 		},
-		Action: daemonStatus,
+		// Action: daemonStatus,
 	}
 }
 
