@@ -1,0 +1,6 @@
+github.com/blang/mpv v0.0.0-20160810175505-d56d7352e068 h1:P3ukpA1t7dgNIfe21LpB+zIBDQ1Dik9K1DMPdO/TcUA=
+github.com/blang/mpv v0.0.0-20160810175505-d56d7352e068/go.mod h1:E3TTEJpVApQMkhVk3Lr0sAmcbcclY3pGgPbRsy+rdlk=
+github.com/urfave/cli v1.20.0 h1:fDqGv3UG/4jbVl/QkFwEdddtEDjh/5Ov6X+0B/3bPaw=
+github.com/urfave/cli v1.20.0/go.mod h1:70zkFmudgCuE/ngEzBv17Jvp/497gISqfk5gWijbERA=
+gopkg.in/urfave/cli.v2 v2.0.0-20180128182452-d3ae77c26ac8 h1:Ggy3mWN4l3PUFPfSG0YB3n5fVYggzysUmiUQ89SnX6Y=
+gopkg.in/urfave/cli.v2 v2.0.0-20180128182452-d3ae77c26ac8/go.mod h1:cKXr3E0k4aosgycml1b5z33BVV6hai1Kh7uDgFOkbcs=
