@@ -1,4 +1,4 @@
-package radio
+package main
 
 import (
 	"encoding/json"
@@ -6,7 +6,16 @@ import (
 	"time"
 )
 
-const url string = "https://r-a-d.io/api"
+const base string = "https://r-a-d.io"
+
+var (
+	url    = base + "/api"
+	stream = base + "/main.mp3"
+)
+
+func StreamURL() string {
+	return stream
+}
 
 type Result struct {
 	Status Status `json:"main"`
@@ -46,7 +55,7 @@ type Position struct {
 	CurrentPerc float64
 }
 
-func Now() (*Status, error) {
+func NowPlaying() (*Status, error) {
 	res, err := http.Get(url)
 	if err != nil {
 		return nil, err

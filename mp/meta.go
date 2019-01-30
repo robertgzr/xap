@@ -1,4 +1,4 @@
-package com
+package mp
 
 import (
 	"fmt"

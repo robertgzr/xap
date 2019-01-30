@@ -1,4 +1,4 @@
-package com
+package mp
 
 import (
 	"errors"
@@ -187,3 +187,5 @@ func (c *Com) Goto(pos int) error {
 	}
 	return c.SetProperty("playlist-pos", pos)
 }
+
+

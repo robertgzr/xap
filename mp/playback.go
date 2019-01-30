@@ -1,4 +1,4 @@
-package com
+package mp
 
 func (c Com) Paused() bool {
 	ok, err := c.Pause()
