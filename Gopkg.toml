@@ -1,8 +1,0 @@
-
-[[dependencies]]
-  name = "github.com/blang/mpv"
-  revision = "d56d7352e068d55e76d5558eb07231bd97ebfaa8"
-
-[[dependencies]]
-  branch = "v2"
-  name = "github.com/urfave/cli"
