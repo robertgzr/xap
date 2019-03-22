@@ -1,8 +1,6 @@
 package command
 
 import (
-	"time"
-
 	"github.com/urfave/cli"
 
 	"github.com/robertgzr/xap/command/control"
@@ -11,8 +9,9 @@ import (
 	"github.com/robertgzr/xap/command/raw"
 )
 
-const (
-	version = "0.1.0"
+var (
+	version   string
+	buildInfo string
 )
 
 func App() *cli.App {
@@ -22,7 +21,8 @@ func App() *cli.App {
 		cli.Author{Name: "robertgzr", Email: "r@gnzler.io"},
 	}
 	app.Version = version
-	app.Compiled = time.Now()
+	app.Metadata = make(map[string]interface{})
+	app.Metadata["buildInfo"] = buildInfo
 	app.Usage = "cli to remote control mpv player"
 	app.UsageText = "xap [global options] command [command options] [arguments...]"
 	app.Flags = []cli.Flag{

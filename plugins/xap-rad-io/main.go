@@ -6,18 +6,26 @@ import (
 	"os"
 	"os/exec"
 
+	xap "github.com/robertgzr/xap/command"
 	"github.com/urfave/cli"
 )
 
-const (
-	version = "0.2.0"
+var (
+	version   string
+	buildInfo string
 )
+
+func init() {
+	cli.VersionPrinter = xap.VersionPrinter
+}
 
 func main() {
 	app := cli.NewApp()
 	app.Name = "xap-rad-io"
 	app.Usage = "interface to r-a-d.io"
 	app.Version = version
+	app.Metadata = make(map[string]interface{})
+	app.Metadata["buildInfo"] = buildInfo
 	app.Flags = []cli.Flag{
 		&cli.StringFlag{
 			Name:  "socket, S",
