@@ -1,6 +1,8 @@
 package raw
 
 import (
+	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 
@@ -34,7 +36,13 @@ var execCommand = cli.Command{
 		if err != nil {
 			return err
 		}
-		fmt.Fprintf(os.Stdout, "%v", resp.Err)
+		if resp.Err != "success" {
+			return errors.New(resp.Err)
+		}
+		if resp.Data != nil {
+			return json.NewEncoder(os.Stdout).Encode(resp.Data)
+		}
+		fmt.Fprintf(os.Stdout, "%v\n", resp.Err)
 		return nil
 	},
 }
