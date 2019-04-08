@@ -15,7 +15,6 @@ var Command = cli.Command{
 		PlayCommand,
 		PauseCommand,
 		StopCommand,
-		NowPlayingCommand,
 
 		volumeCommand,
 		from0Command,

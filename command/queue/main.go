@@ -18,6 +18,7 @@ var Command = cli.Command{
 		AddCommand,
 		NextCommand,
 		PrevCommand,
+		NowPlayingCommand,
 		removeCommand,
 		clearCommand,
 		moveCommand,
