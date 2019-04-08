@@ -1,45 +1,36 @@
 # xap
 
-*For now* a simple alternative to MPD using mpv.
+bring some *mpd* to *mpv*
 
 ## xap cli
 
 command line tool to interact with mpv via unix socket
 
-- [x] basic player ctl
-- [x] basic queue ctl
-- [ ] player settings
-    - [x] switch audio device (via `xap settings audio-device`)
+- [x] player ctl
+- [x] queue ctl
+- [x] player settings
     - [x] softvol adjustments (via `xap vol`)
-    - [x] access to raw mpv properties (via `xap raw`)
-- [x] start/stop background mpv process
-- [x] use with custom mpv socket (e.g. to control [IINA](https://github.com/lhc70000/iina))
+    - [x] access to raw mpv properties (via `xap raw [get|set|exec]`)
+- [x] start/stop background mpv process (via `xap player [start|stop|show]`)
+- [x] use with custom mpv socket (e.g. to control [IINA](https://github.com/lhc70000/iina),
+    [gnome-mpv](https://github.com/gnome-mpv/gnome-mpv), etc.)
 
 For documentation of the available commands check `xap --help`.
 
-## _libxap \*planned\*_
-
-wrapper around mpv's commands, options and properties (via [blang/mpv](https://github.com/blang/mpv))
-
-- [x] basic functionality in `pkg/com`
-- [ ] spawn/stop mpv instance
-- [ ] connect to mpv via unix/tcp socket (find out if `blang/mpv` supports a way to do this)
-
-## Installation
+## installation
 
 With a working [Go environment](https://golang.org/doc/install):
 ```
 go get -u github.com/robertgzr/xap
 ```
 
+## dynamic git-style subcommands
+
+xap supports running external subcommands to extend its functionality.
+For an example of how this can be done see [plugins/xap-rad-io](https://github.com/robertgzr/xap/master/plugins/xap-rad-io)
+
 ## more
 
-### tricks
+### using xap with [beet](https://beets.io)
 - add tracks/albums from your beets library: `beet ls -p <query> | xap add -`
 - simple shuffle with beets: `beet random -p -n <num> [-e] [<query>] | xap add -`
-
-### additional features
-
-- [ ] [beets](beets.io) integration: `shuffle` subcommand
-- [ ] xap web ui?
-- [ ] android app using libxap and a tcp socket?
