@@ -1,6 +1,7 @@
 package player
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"os/exec"
@@ -13,7 +14,7 @@ import (
 var Command = cli.Command{
 	Name:    "player",
 	Aliases: []string{"p"},
-	Usage:   "control a mpv process",
+	Usage:   "Control a mpv process",
 	Subcommands: []cli.Command{
 		statusCommand,
 		runCommand,
@@ -24,6 +25,9 @@ var Command = cli.Command{
 var statusCommand = cli.Command{
 	Name:  "status",
 	Usage: "inspect the status of a detached mpv command",
+	Action: func(_ *cli.Context) error {
+		return errors.New("not implemented")
+	},
 }
 
 var defaultMpvFlags = []string{
@@ -36,7 +40,7 @@ var defaultMpvFlags = []string{
 }
 var runCommand = cli.Command{
 	Name:        "run",
-	Usage:       "start an instance of mpv.",
+	Usage:       "Start an instance of mpv.",
 	Description: `Everything after "--" is passed as arguments to mpv.`,
 	Flags: []cli.Flag{
 		&cli.BoolFlag{
@@ -79,7 +83,7 @@ var runCommand = cli.Command{
 
 var stopCommand = cli.Command{
 	Name:  "stop",
-	Usage: "stops the mpv instance",
+	Usage: "Stops the mpv instance",
 	Action: func(ctx *cli.Context) error {
 		c, err := mp.Connect(ctx)
 		if err != nil {

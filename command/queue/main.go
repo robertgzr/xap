@@ -12,8 +12,8 @@ import (
 
 var Command = cli.Command{
 	Name:    "queue",
-	Aliases: []string{"q", "status"},
-	Usage:   "show the queue",
+	Aliases: []string{"q", "ls"},
+	Usage:   "Show the queue",
 	Subcommands: []cli.Command{
 		AddCommand,
 		NextCommand,

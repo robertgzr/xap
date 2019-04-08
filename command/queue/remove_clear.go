@@ -11,9 +11,9 @@ import (
 
 var removeCommand = cli.Command{
 	Name:        "remove",
-	Category:    "queue",
 	Aliases:     []string{"rm"},
-	Usage:       "remove tracks from the playlist",
+	Category:    "QUEUE",
+	Usage:       "Remove tracks from the playlist",
 	ArgsUsage:   "POSITION",
 	Description: "POSITION can be a single index or a range expression like from..to (`to` is not removed)",
 	Action: func(ctx *cli.Context) error {
@@ -55,8 +55,8 @@ var removeCommand = cli.Command{
 
 var clearCommand = cli.Command{
 	Name:     "clear",
-	Category: "queue",
-	Usage:    "remove all entries from the queue",
+	Category: "QUEUE",
+	Usage:    "Remove all entries from the queue",
 	Action: func(ctx *cli.Context) error {
 		c, err := mp.Connect(ctx)
 		if err != nil {

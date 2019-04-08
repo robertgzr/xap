@@ -8,8 +8,8 @@ import (
 
 var shuffleCommand = cli.Command{
 	Name:     "shuffle",
-	Category: "queue",
-	Usage:    "shuffle the current playlist",
+	Category: "QUEUE",
+	Usage:    "Shuffle the current playlist",
 	Action: func(ctx *cli.Context) error {
 		c, err := mp.Connect(ctx)
 		if err != nil {

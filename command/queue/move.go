@@ -11,8 +11,8 @@ import (
 var moveCommand = cli.Command{
 	Name:      "move",
 	Aliases:   []string{"mv"},
-	Category:  "queue",
-	Usage:     "moves a track from FROM to TO on the playlist",
+	Category:  "QUEUE",
+	Usage:     "Moves a track from FROM to TO on the playlist",
 	ArgsUsage: "FROM TO",
 	Action: func(ctx *cli.Context) error {
 		c, err := mp.Connect(ctx)

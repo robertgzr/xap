@@ -10,8 +10,8 @@ import (
 
 var gotoCommand = cli.Command{
 	Name:      "goto",
-	Category:  "queue",
-	Usage:     "start playing NUMBER track on the queue",
+	Category:  "QUEUE",
+	Usage:     "Start playing NUMBER track on the queue",
 	ArgsUsage: "NUMBER",
 	Action: func(ctx *cli.Context) error {
 		c, err := mp.Connect(ctx)

@@ -12,8 +12,8 @@ import (
 
 var AddCommand = cli.Command{
 	Name:        "add",
-	Category:    "queue",
-	Usage:       "add track(s) to the queue",
+	Category:    "QUEUE",
+	Usage:       "Add track(s) to the queue",
 	ArgsUsage:   "TRACK...",
 	Description: "TRACK can be a file or URL or - to read the list of tracks/URLs from stdin",
 	Flags: []cli.Flag{

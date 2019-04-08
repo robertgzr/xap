@@ -12,7 +12,8 @@ import (
 var volumeCommand = cli.Command{
 	Name:            "vol",
 	ArgsUsage:       "[[+|-]VALUE]",
-	Usage:           "print and adjust the softvol property",
+	Category:        "CONTROL",
+	Usage:           "Print and adjust the softvol property",
 	SkipFlagParsing: true,
 	Action: func(ctx *cli.Context) error {
 		c, err := mp.Connect(ctx)

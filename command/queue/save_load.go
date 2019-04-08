@@ -10,8 +10,8 @@ import (
 
 var saveCommand = cli.Command{
 	Name:      "save",
-	Category:  "queue",
-	Usage:     "save the current playlist to a file",
+	Category:  "QUEUE",
+	Usage:     "Save the current playlist to a file",
 	ArgsUsage: "PATH",
 	Flags: []cli.Flag{
 		&cli.StringFlag{
@@ -38,8 +38,8 @@ var saveCommand = cli.Command{
 
 var loadCommand = cli.Command{
 	Name:      "load",
-	Category:  "queue",
-	Usage:     "load playlist from a file",
+	Category:  "QUEUE",
+	Usage:     "Load playlist from a file",
 	ArgsUsage: "PATH",
 	Flags: []cli.Flag{
 		&cli.BoolFlag{

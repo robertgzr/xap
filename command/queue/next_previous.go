@@ -8,8 +8,8 @@ import (
 
 var NextCommand = cli.Command{
 	Name:     "next",
-	Category: "queue",
-	Usage:    "skips to the next track",
+	Category: "QUEUE",
+	Usage:    "Skips to the next title",
 	Action: func(ctx *cli.Context) error {
 		c, err := mp.Connect(ctx)
 		if err != nil {
@@ -21,8 +21,8 @@ var NextCommand = cli.Command{
 
 var PrevCommand = cli.Command{
 	Name:     "prev",
-	Category: "queue",
-	Usage:    "skips to the previous track",
+	Category: "QUEUE",
+	Usage:    "Skips to the previous title",
 	Action: func(ctx *cli.Context) error {
 		c, err := mp.Connect(ctx)
 		if err != nil {

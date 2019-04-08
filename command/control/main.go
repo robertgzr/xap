@@ -10,7 +10,7 @@ import (
 var Command = cli.Command{
 	Name:    "control",
 	Aliases: []string{"c"},
-	Usage:   "control mpv via socket",
+	Usage:   "Control mpv via socket",
 	Subcommands: []cli.Command{
 		PlayCommand,
 		PauseCommand,
@@ -23,8 +23,9 @@ var Command = cli.Command{
 }
 
 var PlayCommand = cli.Command{
-	Name:  "play",
-	Usage: "start playing the current file",
+	Name:     "play",
+	Category: "CONTROL",
+	Usage:    "Start to play the current file",
 	Action: func(ctx *cli.Context) error {
 		c, err := mp.Connect(ctx)
 		if err != nil {
@@ -35,8 +36,9 @@ var PlayCommand = cli.Command{
 }
 
 var PauseCommand = cli.Command{
-	Name:  "pause",
-	Usage: "pause the current file",
+	Name:     "pause",
+	Category: "CONTROL",
+	Usage:    "Pause the current file",
 	Action: func(ctx *cli.Context) error {
 		c, err := mp.Connect(ctx)
 		if err != nil {
@@ -47,8 +49,9 @@ var PauseCommand = cli.Command{
 }
 
 var StopCommand = cli.Command{
-	Name:  "stop",
-	Usage: "stop the current file",
+	Name:     "stop",
+	Category: "CONTROL",
+	Usage:    "Stop the current file",
 	Action: func(ctx *cli.Context) error {
 		c, err := mp.Connect(ctx)
 		if err != nil {
@@ -59,8 +62,9 @@ var StopCommand = cli.Command{
 }
 
 var from0Command = cli.Command{
-	Name:  "from0",
-	Usage: "restart playback of the current track",
+	Name:     "from0",
+	Category: "CONTROL",
+	Usage:    "Restart playback of the current file",
 	Action: func(ctx *cli.Context) error {
 		c, err := mp.Connect(ctx)
 		if err != nil {
