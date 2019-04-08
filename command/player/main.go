@@ -19,6 +19,7 @@ var Command = cli.Command{
 		statusCommand,
 		runCommand,
 		stopCommand,
+		showCommand,
 	},
 }
 
