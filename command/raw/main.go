@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"os/exec"
 
 	"github.com/urfave/cli"
 
@@ -47,7 +48,7 @@ var execCommand = cli.Command{
 	},
 }
 
-func toEmptyInterfaceSlice(args cli.Args) []interface{} {
+func toEmptyInterfaceSlice(args []string) []interface{} {
 	var ifs = make([]interface{}, len(args))
 	for i, a := range args {
 		ifs[i] = a
@@ -65,6 +66,24 @@ var getCommand = cli.Command{
 EXAMPLES:
    $ xap raw get mpv-version
 `,
+	Action: func(ctx *cli.Context) error {
+		prop := ctx.Args().First()
+		if prop == "" {
+			return errors.New("Empty PROPERTY")
+		}
+		c, err := mp.Connect(ctx)
+		if err != nil {
+			return err
+		}
+		resp, err := c.Exec("get_property", prop)
+		if err != nil {
+			return err
+		}
+		if resp.Err != "success" {
+			return errors.New(resp.Err)
+		}
+		return json.NewEncoder(os.Stdout).Encode(resp.Data)
+	},
 }
 
 var setCommand = cli.Command{
@@ -77,4 +96,14 @@ var setCommand = cli.Command{
 EXAMPLES:
    xap raw set paused 1
 `,
+	Action: func(ctx *cli.Context) error {
+		if len(ctx.Args()) < 2 {
+			return errors.New("Need both PROPERTY and VALUE")
+		}
+		args := append([]string{"raw", "exec", "set_property"}, ctx.Args()...)
+		cmd := exec.Command(os.Args[0], args...)
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+		return cmd.Run()
+	},
 }
