@@ -31,8 +31,6 @@ var statusCommand = cli.Command{
 }
 
 var defaultMpvFlags = []string{
-	"--idle",
-	"--no-config",
 	"--no-video",
 	"--no-sub",
 	"--gapless-audio=yes",
@@ -57,7 +55,10 @@ var runCommand = cli.Command{
 		},
 	},
 	Action: func(ctx *cli.Context) error {
-		args := append(ctx.Args(), fmt.Sprintf("--input-ipc-server=%s", ctx.GlobalString("socket")))
+		args := append(ctx.Args(),
+			fmt.Sprintf("--input-ipc-server=%s", ctx.GlobalString("socket")),
+			"--idle",
+		)
 		if !ctx.Bool("no-defaults") {
 			args = append(args, defaultMpvFlags...)
 		}
