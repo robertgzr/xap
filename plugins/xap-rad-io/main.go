@@ -26,13 +26,7 @@ func main() {
 	app.Version = version
 	app.Metadata = make(map[string]interface{})
 	app.Metadata["buildInfo"] = buildInfo
-	app.Flags = []cli.Flag{
-		&cli.StringFlag{
-			Name:  "socket, S",
-			Usage: "filepath to the ipc socket",
-			Value: "/tmp/mpv.sock",
-		},
-	}
+	app.Flags = xap.App().Flags
 	app.Commands = []cli.Command{
 		statusCommand,
 		playCommand,

@@ -1,6 +1,9 @@
 package command
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/urfave/cli"
 
 	"github.com/robertgzr/xap/command/control"
@@ -26,10 +29,10 @@ func App() *cli.App {
 	app.Usage = "cli to remote control mpv player"
 	app.UsageText = "xap [global options] command [command options] [arguments...]"
 	app.Flags = []cli.Flag{
-		&cli.StringFlag{
+		cli.StringFlag{
 			Name:  "socket, S",
 			Usage: "filepath to the ipc socket",
-			Value: "/tmp/mpv.sock",
+			Value: fmt.Sprintf("/var/run/user/%d/mpv", os.Getuid()),
 		},
 	}
 	app.Commands = []cli.Command{
