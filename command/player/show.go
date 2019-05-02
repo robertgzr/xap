@@ -7,7 +7,7 @@ import (
 
 var showCommand = cli.Command{
 	Name:  "show",
-	Usage: "show the mpv UI",
+	Usage: "show the mpv UI (toggles visibility when already shown)",
 	Action: func(ctx *cli.Context) error {
 		c, err := mp.Connect(ctx)
 		if err != nil {
@@ -19,7 +19,8 @@ var showCommand = cli.Command{
 		}
 		if video == "false" {
 			return c.SetProperty("video", 1)
+		} else {
+			return c.SetProperty("video", 0)
 		}
-		return nil
 	},
 }
