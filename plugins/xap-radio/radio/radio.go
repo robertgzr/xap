@@ -1,8 +1,10 @@
-package main
+package radio
 
 import (
 	"encoding/json"
+	"html/template"
 	"net/http"
+	"os"
 	"time"
 )
 
@@ -55,16 +57,16 @@ type Position struct {
 	CurrentPerc float64
 }
 
-func NowPlaying() (*Status, error) {
+func apiRequest() (*Result, error) {
 	res, err := http.Get(url)
 	if err != nil {
 		return nil, err
 	}
-	dec := json.NewDecoder(res.Body)
 	defer res.Body.Close()
 
-	var r = new(Result)
-	if err := dec.Decode(r); err != nil {
+	var r Result
+	err = json.NewDecoder(res.Body).Decode(&r)
+	if err != nil {
 		return nil, err
 	}
 
@@ -78,11 +80,35 @@ func NowPlaying() (*Status, error) {
 	if pos.Len.Nanoseconds() < 1 {
 		pos.Ok = false
 		r.Status.Pos = pos
-		return &r.Status, nil
+		return &r, nil
 	}
 	pos.Current = pos.Now.Sub(pos.Start)
 	pos.CurrentPerc = (100 / float64(pos.Len)) * float64(pos.Current)
 	r.Status.Pos = pos
+	return &r, nil
+}
 
-	return &r.Status, nil
+const tmpl = `r-a-d.io:
+| {{ .NowPlaying }} {{ if .Pos.Ok }}
+| {{ .Pos.Current }} / {{ .Pos.Len }} ({{ printf "%.2f%%" .Pos.CurrentPerc }}){{ end }}
+|
+| {{ .Dj.Name }} {{ if .IsAfk }}(afk){{ end }}
+| Listeners: {{ .Listeners }}
+|
+| Last Played:{{ range .LastPlayed }}
+|   * {{ .Meta }}{{ end }}
+| Queue:{{ range .Queue }}
+|   * {{ .Meta }}{{ end }}
+`
+
+// | Last: {{ with index .LastPlayed 0 }}{{ .Meta }}{{ end }}
+// | Next: {{ with index .Queue 0 }}{{ .Meta }}{{ end }}
+
+func PrintStatus() error {
+	r, err := apiRequest()
+	if err != nil {
+		return err
+	}
+	t := template.Must(template.New("now").Parse(tmpl))
+	return t.Execute(os.Stdout, r.Status)
 }
