@@ -23,6 +23,10 @@ var gotoCommand = cli.Command{
 		if err != nil {
 			return err
 		}
-		return c.Goto(pos)
+		err = c.Goto(pos)
+		if err != nil {
+			return err
+		}
+		return c.Play()
 	},
 }
