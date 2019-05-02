@@ -12,12 +12,7 @@ import (
 	"github.com/robertgzr/xap/command/raw"
 )
 
-var (
-	version   string
-	buildInfo string
-)
-
-func App() *cli.App {
+func App(version, buildInfo string) *cli.App {
 	app := cli.NewApp()
 	app.Name = "xap"
 	app.Authors = []cli.Author{
