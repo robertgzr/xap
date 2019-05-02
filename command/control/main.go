@@ -1,7 +1,6 @@
 package control
 
 import (
-	"github.com/blang/mpv"
 	"github.com/urfave/cli"
 
 	"github.com/robertgzr/xap/mp"
@@ -18,6 +17,7 @@ var Command = cli.Command{
 
 		volumeCommand,
 		from0Command,
+		seekCommand,
 	},
 }
 
@@ -57,18 +57,5 @@ var StopCommand = cli.Command{
 			return err
 		}
 		return c.Stop()
-	},
-}
-
-var from0Command = cli.Command{
-	Name:     "from0",
-	Category: "CONTROL",
-	Usage:    "Restart playback of the current file",
-	Action: func(ctx *cli.Context) error {
-		c, err := mp.Connect(ctx)
-		if err != nil {
-			return err
-		}
-		return c.Seek(0, mpv.SeekModeAbsolute)
 	},
 }
