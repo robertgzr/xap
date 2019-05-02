@@ -7,8 +7,8 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/pkg/errors"
 	"github.com/urfave/cli"
+	errors "golang.org/x/xerrors"
 )
 
 var tunnelCommand = cli.Command{
@@ -44,7 +44,7 @@ var tunnelCommand = cli.Command{
 		cmd.Stderr = os.Stderr
 		err := cmd.Start()
 		if err != nil {
-			return errors.Wrapf(err, "failed to connect to %s", addr)
+			return errors.Errorf("failed to connect to %s: %w", addr, err)
 		}
 		done := make(chan error, 1)
 		go func() {
@@ -58,12 +58,12 @@ var tunnelCommand = cli.Command{
 		case <-sigchan:
 			fmt.Fprintf(os.Stdout, "Stopping tunnel...\n")
 			if err := cmd.Process.Kill(); err != nil {
-				return errors.Wrap(err, "failed to kill ssh command")
+				return errors.Errorf("failed to kill ssh command: %w", err)
 			}
 		case err := <-done:
 			fmt.Fprintf(os.Stdout, "Tunnel stopped working...\n")
 			if err != nil {
-				return errors.Wrap(err, "ssh command failed")
+				return errors.Errorf("ssh command failed: %w", err)
 			}
 		}
 
