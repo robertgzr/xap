@@ -43,7 +43,7 @@ var PauseCommand = cli.Command{
 		if err != nil {
 			return err
 		}
-		return c.SetPause(true)
+		return c.SetPause(!c.Paused())
 	},
 }
 
