@@ -20,6 +20,7 @@ var Command = cli.Command{
 		runCommand,
 		stopCommand,
 		showCommand,
+		tunnelCommand,
 	},
 }
 
