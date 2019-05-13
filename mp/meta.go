@@ -25,7 +25,7 @@ type Position struct {
 	CurrentPerc float64
 }
 
-func (c *Com) Now() (meta Metadata, err error) {
+func (c *Mp) Now() (meta Metadata, err error) {
 	var res = new(mpv.Response)
 	res, err = c.Exec("get_property", "metadata")
 	if err != nil {
@@ -89,6 +89,6 @@ func (c *Com) Now() (meta Metadata, err error) {
 	return
 }
 
-func (c *Com) MediaTitle() (string, error) {
+func (c *Mp) MediaTitle() (string, error) {
 	return c.GetProperty("media-title")
 }

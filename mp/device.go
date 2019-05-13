@@ -13,7 +13,7 @@ type AudioDevice struct {
 	Current     bool
 }
 
-func (c *Com) AudioDeviceList() ([]AudioDevice, error) {
+func (c *Mp) AudioDeviceList() ([]AudioDevice, error) {
 	var adlst []AudioDevice
 
 	current, err := c.GetAudioDevice()
@@ -52,7 +52,7 @@ func (c *Com) AudioDeviceList() ([]AudioDevice, error) {
 	return adlst, err
 }
 
-func (c *Com) SetAudioDevice(id int) error {
+func (c *Mp) SetAudioDevice(id int) error {
 	adlst, err := c.AudioDeviceList()
 	if err != nil {
 		return err
@@ -60,7 +60,7 @@ func (c *Com) SetAudioDevice(id int) error {
 	return c.SetProperty("audio-device", adlst[id].Name)
 }
 
-func (c *Com) GetAudioDevice() (string, error) {
+func (c *Mp) GetAudioDevice() (string, error) {
 	ad, err := c.GetProperty("audio-device")
 	if err != nil {
 		return "", err

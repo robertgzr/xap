@@ -1,6 +1,6 @@
 package mp
 
-func (c Com) Paused() bool {
+func (c Mp) Paused() bool {
 	ok, err := c.Pause()
 	if err != nil {
 		return false
@@ -8,7 +8,7 @@ func (c Com) Paused() bool {
 	return ok
 }
 
-func (c *Com) Play() error {
+func (c *Mp) Play() error {
 	posString, err := c.GetProperty("playlist-pos")
 	if err != nil {
 		return err
@@ -20,7 +20,7 @@ func (c *Com) Play() error {
 	return c.SetPause(false)
 }
 
-func (c *Com) Stop() error {
+func (c *Mp) Stop() error {
 	_, err := c.Exec("stop")
 	return err
 

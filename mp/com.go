@@ -15,13 +15,13 @@ var (
 	ErrNoFilepath      = errors.New("need to provide a filepath or URL")
 )
 
-// Com wraps mpv.Client
-type Com struct {
+// Mp wraps mpv.Client
+type Mp struct {
 	mpv.Client
 }
 
-// NewCom returns a new client on the socket at socketPath
-func NewCom(socketPath string) (c *Com, err error) {
+// NewMp returns a new client on the socket at socketPath
+func NewMp(socketPath string) (c *Mp, err error) {
 	socketPath, err = filepath.EvalSymlinks(socketPath)
 	if err != nil {
 		return nil, err
@@ -52,10 +52,10 @@ func NewCom(socketPath string) (c *Com, err error) {
 		return nil, err
 	}
 
-	return &Com{*mpvc}, nil
+	return &Mp{*mpvc}, nil
 }
 
-func (c *Com) GetIntProperty(prop string) (int, error) {
+func (c *Mp) GetIntProperty(prop string) (int, error) {
 	res, err := c.GetProperty(prop)
 	if err != nil {
 		return -1, err
@@ -63,7 +63,7 @@ func (c *Com) GetIntProperty(prop string) (int, error) {
 	return strconv.Atoi(res)
 }
 
-func (c *Com) Quit() error {
+func (c *Mp) Quit() error {
 	_, err := c.Exec("quit")
 	return err
 }

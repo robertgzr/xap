@@ -2,7 +2,7 @@ package mp
 
 type Volume float64
 
-func (c *Com) Volume() (Volume, error) {
+func (c *Mp) Volume() (Volume, error) {
 	vol, err := c.GetFloatProperty("volume")
 	if err != nil {
 		return Volume(0.0), err
@@ -10,7 +10,7 @@ func (c *Com) Volume() (Volume, error) {
 	return Volume(vol), nil
 }
 
-func (c *Com) VolumeUp(val float64) error {
+func (c *Mp) VolumeUp(val float64) error {
 	vol, err := c.Volume()
 	if err != nil {
 		return err
@@ -22,7 +22,7 @@ func (c *Com) VolumeUp(val float64) error {
 	return nil
 }
 
-func (c *Com) VolumeDown(val float64) error {
+func (c *Mp) VolumeDown(val float64) error {
 	vol, err := c.Volume()
 	if err != nil {
 		return err
