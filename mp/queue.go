@@ -3,8 +3,8 @@ package mp
 import (
 	"errors"
 	"path"
+	"path/filepath"
 	"strconv"
-	"strings"
 
 	"github.com/blang/mpv"
 )
@@ -98,12 +98,7 @@ func (c *Mp) LoadNext(tracks ...string) error {
 func (c *Mp) load(tracks []string, mode string) error {
 	for _, t := range tracks {
 		// load file or URL
-		switch {
-		case strings.HasSuffix(t, ".nfo"):
-			fallthrough
-		case strings.HasSuffix(t, ".jpg"):
-			fallthrough
-		case strings.HasSuffix(t, ".png"):
+		if ignored(t) {
 			continue
 		}
 		if err := c.loadSingleTrack(t, mode); err != nil {
@@ -111,6 +106,19 @@ func (c *Mp) load(tracks []string, mode string) error {
 		}
 	}
 	return nil
+}
+
+func ignored(filename string) bool {
+	ignoredExt := map[string]struct{}{
+		"nfo": struct{}{},
+		"jpg": struct{}{},
+		"png": struct{}{},
+	}
+	ext := filepath.Ext(filename)
+	if _, ok := ignoredExt[ext]; ok {
+		return true
+	}
+	return false
 }
 
 func (c *Mp) loadSingleTrack(track, mode string) error {
