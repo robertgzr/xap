@@ -1,16 +1,12 @@
 package mp
 
 import (
-	"errors"
 	"path"
 	"path/filepath"
 	"strconv"
 
 	"github.com/blang/mpv"
-)
-
-var (
-	ErrLoadingTrack string = "Error loading track: "
+	errors "golang.org/x/xerrors"
 )
 
 type Queue []Track
@@ -102,7 +98,7 @@ func (c *Mp) load(tracks []string, mode string) error {
 			continue
 		}
 		if err := c.loadSingleTrack(t, mode); err != nil {
-			return errors.New(ErrLoadingTrack + err.Error())
+			return errors.Errorf("Error loading track: %w", err)
 		}
 	}
 	return nil

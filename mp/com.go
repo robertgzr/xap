@@ -12,7 +12,7 @@ import (
 
 var (
 	ErrNoPlayerRunning = errors.New("No player running")
-	ErrNoFilepath      = errors.New("need to provide a filepath or URL")
+	ErrNoFilepath      = errors.New("No filepath or URL")
 )
 
 // Mp wraps mpv.Client
