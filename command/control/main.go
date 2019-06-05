@@ -18,6 +18,7 @@ var Command = cli.Command{
 		volumeCommand,
 		from0Command,
 		seekCommand,
+		statusCommand,
 	},
 }
 

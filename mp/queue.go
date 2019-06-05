@@ -12,11 +12,11 @@ import (
 type Queue []Track
 
 type Track struct {
-	Index    int
-	Title    string
-	Location string
-	Playing  bool
-	Current  bool
+	Index    int    `json:"index"`
+	Title    string `json:"title"`
+	Location string `json:"location"`
+	Playing  bool   `json:"playing"`
+	Current  bool   `json:"current"`
 }
 
 func (c *Mp) Queue() (Queue, error) {

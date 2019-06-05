@@ -1,6 +1,7 @@
 package queue
 
 import (
+	"encoding/json"
 	"fmt"
 	"html"
 	"os"
@@ -20,7 +21,11 @@ var NowPlayingCommand = cli.Command{
 	Flags: []cli.Flag{
 		&cli.BoolFlag{
 			Name:  "watch, w",
-			Usage: "keep open and refresh",
+			Usage: "(not done yet) keep open and refresh",
+		},
+		&cli.BoolFlag{
+			Name:  "json, j",
+			Usage: "output json",
 		},
 	},
 	Action: func(ctx *cli.Context) error {
@@ -31,6 +36,9 @@ var NowPlayingCommand = cli.Command{
 		meta, err := c.Now()
 		if err != nil {
 			return err
+		}
+		if ctx.Bool("json") {
+			return jsonNowPlaying(meta)
 		}
 		return renderNowPlaying(meta)
 	},
@@ -54,4 +62,8 @@ func renderNowPlaying(meta mp.Metadata) error {
 
 	t = template.Must(t.Parse(tmpl))
 	return t.Execute(os.Stdout, meta)
+}
+
+func jsonNowPlaying(meta mp.Metadata) error {
+	return json.NewEncoder(os.Stdout).Encode(meta)
 }
