@@ -17,7 +17,7 @@ var defaultMpvFlags = []string{
 	"--no-video",
 	"--no-sub",
 	"--gapless-audio=yes",
-	"--volume=70.0",
+	"--volume=100.0",
 }
 var runCommand = cli.Command{
 	Name:        "run",
