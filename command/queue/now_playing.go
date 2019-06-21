@@ -40,13 +40,12 @@ var NowPlayingCommand = cli.Command{
 		if ctx.Bool("json") {
 			return jsonNowPlaying(meta)
 		}
-		return renderNowPlaying(meta)
+		return renderNowPlaying(meta, c.Paused())
 	},
 }
 
-func renderNowPlaying(meta mp.Metadata) error {
-	tmpl := `NOW:
-| {{ .Title | unescape }}
+func renderNowPlaying(meta mp.Metadata, paused bool) error {
+	tmpl := `| {{ .Title | unescape }}
 {{- with .Artist }}| {{ . }}{{ end }}
 {{- with .Album }}| {{ . }} ({{ .Date }}) {{ .Nr }}{{ end }}
 |
@@ -61,6 +60,13 @@ func renderNowPlaying(meta mp.Metadata) error {
 	}))
 
 	t = template.Must(t.Parse(tmpl))
+	fmt.Fprintf(os.Stdout, "NOW: %s\n", func() string {
+		if paused {
+			return "(paused)"
+		} else {
+			return ""
+		}
+	}())
 	return t.Execute(os.Stdout, meta)
 }
 
