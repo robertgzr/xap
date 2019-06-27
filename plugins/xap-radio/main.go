@@ -27,7 +27,7 @@ func init() {
 func main() {
 	app := cli.NewApp()
 	app.Name = "xap-radio"
-	app.Usage = "interface to r-a-d.io and stew.moe"
+	app.Usage = "internet radio + xap = <3"
 	app.Version = version
 	app.Metadata = make(map[string]interface{})
 	app.Metadata["buildInfo"] = buildInfo
