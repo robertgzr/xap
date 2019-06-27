@@ -7,7 +7,7 @@ import (
 )
 
 func VersionPrinter(ctx *cli.Context) {
-	fmt.Fprintf(ctx.App.Writer, "%v version %v (%v)\n", ctx.App.Name, ctx.App.Version, ctx.App.Metadata["buildInfo"])
+	fmt.Fprintf(ctx.App.Writer, "%v version %v (%v)\n", ctx.App.Name, ctx.App.Version, ctx.App.Metadata["build_date"])
 }
 
 func init() {

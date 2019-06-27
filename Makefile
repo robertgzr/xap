@@ -3,9 +3,10 @@ PROJECT := github.com/robertgzr/xap
 BUILDTAGS ?= static_build netgo osusergo
 
 VERSION ?= $(shell git describe --tag --always)
-BUILD_INFO ?= $(shell date +%FT%T)
+DATE ?= $(shell date +%FT%T)
+COMMIT ?= $(shell git rev-parse HEAD)
 
-LDFLAGS ?= -s -X main.version=$(VERSION) -X main.buildInfo=$(BUILD_INFO)
+LDFLAGS ?= -s -X main.version=$(VERSION) -X main.date=$(DATE) -X main.commit=$(COMMIT)
 GOFLAGS := -ldflags '$(LDFLAGS)' -tags "$(BUILDTAGS)"
 
 binaries: xap xap-radio
@@ -21,7 +22,7 @@ install:
 	install bin/xap-radio -t $(GOPATH)/bin
 
 clean:
-	$(RM) -r bin/
+	$(RM) -r bin/ dist/
 
 .PHONY: \
     binaries \

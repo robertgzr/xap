@@ -8,12 +8,13 @@ import (
 )
 
 var (
-	version   = "undefined"
-	buildInfo = "undefined"
+	version = "undefined"
+	commit  = "undefined"
+	date    = "undefined"
 )
 
 func main() {
-	app := command.App(version, buildInfo)
+	app := command.App(version, commit, date)
 	if err := app.Run(os.Args); err != nil {
 		fmt.Fprintf(os.Stderr, "%s: %s\n", app.Name, err)
 		os.Exit(1)

@@ -12,7 +12,7 @@ import (
 	"github.com/robertgzr/xap/command/raw"
 )
 
-func App(version, buildInfo string) *cli.App {
+func App(version, commit, date string) *cli.App {
 	app := cli.NewApp()
 	app.Name = "xap"
 	app.Authors = []cli.Author{
@@ -20,7 +20,8 @@ func App(version, buildInfo string) *cli.App {
 	}
 	app.Version = version
 	app.Metadata = make(map[string]interface{})
-	app.Metadata["buildInfo"] = buildInfo
+	app.Metadata["build_commit"] = commit
+	app.Metadata["build_date"] = date
 	app.Usage = "cli to remote control mpv player"
 	app.UsageText = "xap [global options] command [command options] [arguments...]"
 	app.Flags = []cli.Flag{

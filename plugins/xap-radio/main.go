@@ -16,8 +16,9 @@ import (
 )
 
 var (
-	version   = "undefined"
-	buildInfo = "undefined"
+	version = "undefined"
+	commit  = "undefined"
+	date    = "undefined"
 )
 
 func init() {
@@ -30,8 +31,9 @@ func main() {
 	app.Usage = "internet radio + xap = <3"
 	app.Version = version
 	app.Metadata = make(map[string]interface{})
-	app.Metadata["buildInfo"] = buildInfo
-	app.Flags = xap.App("", "").Flags
+	app.Metadata["build_commit"] = commit
+	app.Metadata["build_date"] = date
+	app.Flags = xap.App("", "", "").Flags
 	app.Commands = []cli.Command{
 		statusCommand,
 		playCommand,
