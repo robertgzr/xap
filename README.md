@@ -27,7 +27,7 @@ go get -u github.com/robertgzr/xap
 ## dynamic git-style subcommands
 
 xap supports running external subcommands to extend its functionality.
-For an example of how this can be done see [plugins/xap-radio](https://github.com/robertgzr/xap/master/plugins/xap-radio)
+For an example of how this can be done see [plugins/xap-radio](https://github.com/robertgzr/xap/tree/master/plugins/xap-radio)
 
 ## more
 
