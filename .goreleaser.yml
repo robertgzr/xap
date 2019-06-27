@@ -1,0 +1,51 @@
+# This is an example goreleaser.yaml file with some sane defaults.
+# Make sure to check the documentation at http://goreleaser.com
+before:
+  hooks:
+  - make clean
+  - go mod download
+
+builds:
+- main: ./main.go
+  binary: xap
+  env: &env
+  - CGO_ENABLED=0
+  flags: &flags
+  - -tags='osusergo netgo static_build'
+  goos: &goos
+  - linux
+  - darwin
+  goarch: &goarch
+  - amd64
+  - arm
+- main: plugins/xap-radio/main.go
+  binary: xap-radio
+  env: *env
+  flags: *flags
+  goos: *goos
+  goarch: *goarch
+
+archives:
+- name_template: "{{.ProjectName}}-v{{.Version}}-{{.Os}}-{{.Arch}}"
+  replacements:
+    386: i386
+    amd64: x86_64
+  wrap_in_directory: true
+
+checksum:
+  name_template: 'checksums.txt'
+
+snapshot:
+  name_template: "{{.Tag}}-dev"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+    - '^docs:'
+    - '^test:'
+    - 'README'
+
+release:
+  draft: true
+  name_template: "v{{.Tag}}"
