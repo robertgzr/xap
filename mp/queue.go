@@ -1,29 +1,25 @@
-package com
+package mp
 
 import (
-	"errors"
 	"path"
+	"path/filepath"
 	"strconv"
-	"strings"
 
 	"github.com/blang/mpv"
-)
-
-var (
-	ErrLoadingTrack string = "Error loading track: "
+	errors "golang.org/x/xerrors"
 )
 
 type Queue []Track
 
 type Track struct {
-	Index    int
-	Title    string
-	Location string
-	Playing  bool
-	Current  bool
+	Index    int    `json:"index"`
+	Title    string `json:"title"`
+	Location string `json:"location"`
+	Playing  bool   `json:"playing"`
+	Current  bool   `json:"current"`
 }
 
-func (c *Com) Queue() (Queue, error) {
+func (c *Mp) Queue() (Queue, error) {
 	var plst Queue
 
 	res, err := c.Exec("get_property", "playlist")
@@ -65,27 +61,27 @@ func (c *Com) Queue() (Queue, error) {
 	return plst, nil
 }
 
-func (c *Com) PlaylistPos() (int, error) {
+func (c *Mp) PlaylistPos() (int, error) {
 	return c.GetIntProperty("playlist-pos")
 }
 
-func (c *Com) PlaylistLen() (int, error) {
+func (c *Mp) PlaylistLen() (int, error) {
 	return c.GetIntProperty("playlist-count")
 }
 
-func (c *Com) LoadAppend(tracks ...string) error {
+func (c *Mp) LoadAppend(tracks ...string) error {
 	return c.load(tracks, mpv.LoadFileModeAppend)
 }
 
-func (c *Com) LoadPlay(tracks ...string) error {
+func (c *Mp) LoadPlay(tracks ...string) error {
 	return c.load(tracks, mpv.LoadFileModeAppendPlay)
 }
 
-func (c *Com) LoadReplace(tracks ...string) error {
+func (c *Mp) LoadReplace(tracks ...string) error {
 	return c.load(tracks, mpv.LoadFileModeReplace)
 }
 
-func (c *Com) LoadNext(tracks ...string) error {
+func (c *Mp) LoadNext(tracks ...string) error {
 	if err := c.load(tracks, mpv.LoadFileModeAppend); err != nil {
 		return err
 	}
@@ -95,42 +91,50 @@ func (c *Com) LoadNext(tracks ...string) error {
 	return c.Move(len-1, pos+1)
 }
 
-func (c *Com) load(tracks []string, mode string) error {
+func (c *Mp) load(tracks []string, mode string) error {
 	for _, t := range tracks {
 		// load file or URL
-		switch {
-		case strings.HasSuffix(t, ".nfo"):
-			fallthrough
-		case strings.HasSuffix(t, ".jpg"):
-			fallthrough
-		case strings.HasSuffix(t, ".png"):
+		if ignored(t) {
 			continue
 		}
 		if err := c.loadSingleTrack(t, mode); err != nil {
-			return errors.New(ErrLoadingTrack + err.Error())
+			return errors.Errorf("Error loading track: %w", err)
 		}
 	}
 	return nil
 }
 
-func (c *Com) loadSingleTrack(track, mode string) error {
+func ignored(filename string) bool {
+	ignoredExt := map[string]struct{}{
+		"nfo": struct{}{},
+		"jpg": struct{}{},
+		"png": struct{}{},
+	}
+	ext := filepath.Ext(filename)
+	if _, ok := ignoredExt[ext]; ok {
+		return true
+	}
+	return false
+}
+
+func (c *Mp) loadSingleTrack(track, mode string) error {
 	if track == "" {
 		return ErrNoFilepath
 	}
 	return c.Loadfile(track, mode)
 }
 
-func (c *Com) LoadListAppend(path string) error {
+func (c *Mp) LoadListAppend(path string) error {
 	return c.loadlist(path, mpv.LoadListModeAppend)
 }
 
-func (c *Com) LoadListReplace(path string) error {
+func (c *Mp) LoadListReplace(path string) error {
 	return c.loadlist(path, mpv.LoadListModeReplace)
 }
 
 // TODO: LoadListNext
 
-func (c *Com) loadlist(path, mode string) error {
+func (c *Mp) loadlist(path, mode string) error {
 	_, err := c.Exec("loadlist", path, mode)
 	if err != nil {
 		return err
@@ -138,15 +142,15 @@ func (c *Com) loadlist(path, mode string) error {
 	return nil
 }
 
-func (c *Com) Next() error {
+func (c *Mp) Next() error {
 	return c.PlaylistNext()
 }
 
-func (c *Com) Prev() error {
+func (c *Mp) Prev() error {
 	return c.PlaylistPrevious()
 }
 
-func (c *Com) Move(from, to int) error {
+func (c *Mp) Move(from, to int) error {
 	fromStr, toStr := strconv.Itoa(from), strconv.Itoa(to)
 	_, err := c.Exec("playlist-move", fromStr, toStr)
 	if err != nil {
@@ -155,7 +159,7 @@ func (c *Com) Move(from, to int) error {
 	return nil
 }
 
-func (c *Com) Shuffle() error {
+func (c *Mp) Shuffle() error {
 	_, err := c.Exec("playlist-shuffle")
 	if err != nil {
 		return err
@@ -163,7 +167,7 @@ func (c *Com) Shuffle() error {
 	return nil
 }
 
-func (c *Com) Remove(n int) error {
+func (c *Mp) Remove(n int) error {
 	_, err := c.Exec("playlist-remove", strconv.Itoa(n))
 	if err != nil {
 		return err
@@ -171,7 +175,7 @@ func (c *Com) Remove(n int) error {
 	return nil
 }
 
-func (c *Com) Clear() error {
+func (c *Mp) Clear() error {
 	_, err := c.Exec("playlist-clear")
 	if err != nil {
 		return err
@@ -179,7 +183,7 @@ func (c *Com) Clear() error {
 	return nil
 }
 
-func (c *Com) Goto(pos int) error {
+func (c *Mp) Goto(pos int) error {
 	if len, err := c.PlaylistLen(); err != nil {
 		return err
 	} else if len < pos {

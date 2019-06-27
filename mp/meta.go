@@ -1,4 +1,4 @@
-package com
+package mp
 
 import (
 	"fmt"
@@ -9,23 +9,23 @@ import (
 )
 
 type Metadata struct {
-	Title  string
-	Artist string
-	Album  string
-	Genre  string
-	Nr     string
-	Date   string
+	Title  string `json:"title"`
+	Artist string `json:"artist"`
+	Album  string `json:"album"`
+	Genre  string `json:"genre"`
+	Track  string `json:"track"`
+	Date   string `json:"date"`
 
-	Pos Position
+	Pos Position `json:"position"`
 }
 
 type Position struct {
-	Len         time.Duration
-	Current     time.Duration
-	CurrentPerc float64
+	Len         time.Duration `json:"duration"`
+	Current     time.Duration `json:"current"`
+	CurrentPerc float64       `json:"current_percent"`
 }
 
-func (c *Com) Now() (meta Metadata, err error) {
+func (c *Mp) Now() (meta Metadata, err error) {
 	var res = new(mpv.Response)
 	res, err = c.Exec("get_property", "metadata")
 	if err != nil {
@@ -49,7 +49,7 @@ func (c *Com) Now() (meta Metadata, err error) {
 		meta.Genre = data["genre"].(string)
 	}
 	if _, ok := data["track"]; ok {
-		meta.Nr = data["track"].(string)
+		meta.Track = data["track"].(string)
 	}
 	if _, ok := data["date"]; ok {
 		meta.Date = data["date"].(string)
@@ -89,6 +89,6 @@ func (c *Com) Now() (meta Metadata, err error) {
 	return
 }
 
-func (c *Com) MediaTitle() (string, error) {
+func (c *Mp) MediaTitle() (string, error) {
 	return c.GetProperty("media-title")
 }
